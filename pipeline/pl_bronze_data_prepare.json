@@ -145,7 +145,7 @@
 					"storedProcedureParameters": {
 						"new_last_date": {
 							"value": {
-								"value": "'@{activity('max_date').output.value[0].max_date}'",
+								"value": "@{activity('max_date').output.value[0].max_date}",
 								"type": "Expression"
 							},
 							"type": "Datetime"
