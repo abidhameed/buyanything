@@ -1,0 +1,43 @@
+{
+	"name": "pl_copy_csv_to_sqldb",
+	"properties": {
+		"activities": [
+			{
+				"name": "copy_csvtosqldb",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "HttpReadSettings",
+							"requestMethod": "GET"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "dataset_csv_raw",
+						"type": "DatasetReference",
+						"parameters": {
+							"filename": "buy anything sales.csv"
+						}
+					}
+				]
+			}
+		],
+		"annotations": []
+	}
+}
