@@ -17,7 +17,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": "select lastdate from dateholder",
+						"sqlReaderQuery": "select lastdate last_date from dateholder",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -68,7 +68,7 @@
 					"source": {
 						"type": "AzureSqlSource",
 						"sqlReaderQuery": {
-							"value": "select * from  SalesOrders where date > '@{activity('last_date').output.value[0].lasdate}' and '@{activity('max_date').output.value[0].lasdate}'",
+							"value": "select * from  SalesOrders where orderdate > '@{activity,'last_date').output.value[0].lasdate}' and orderdate <= '@{activity('max_date').output.value[0].maxdate}'",
 							"type": "Expression"
 						},
 						"queryTimeout": "02:00:00",
