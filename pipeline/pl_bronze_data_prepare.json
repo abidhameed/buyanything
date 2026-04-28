@@ -55,7 +55,20 @@
 			{
 				"name": "copy_data_bronze",
 				"type": "Copy",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "max_date",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "last_date",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -68,7 +81,7 @@
 					"source": {
 						"type": "AzureSqlSource",
 						"sqlReaderQuery": {
-							"value": "select * from  SalesOrders where orderdate > '@{activity,'last_date').output.value[0].lasdate}' and orderdate <= '@{activity('max_date').output.value[0].maxdate}'",
+							"value": "select * from  SalesOrders where orderdate > '@{activity('last_date').output.value[0].las_date}' and orderdate <= '@{activity('max_date').output.value[0].maxd_date}'",
 							"type": "Expression"
 						},
 						"queryTimeout": "02:00:00",
@@ -82,6 +95,42 @@
 						"type": "DatasetReference"
 					}
 				]
+			},
+			{
+				"name": "sp_update_last_date",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "copy_data_bronze",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[sp_updatedateholder]",
+					"storedProcedureParameters": {
+						"new_last_date": {
+							"value": {
+								"value": "'@activity('max_date').output.value[0].max_date'",
+								"type": "Expression"
+							},
+							"type": "DateTime"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase_linked_service",
+					"type": "LinkedServiceReference"
+				}
 			}
 		],
 		"annotations": []
