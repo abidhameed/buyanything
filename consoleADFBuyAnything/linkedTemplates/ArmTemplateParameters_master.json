@@ -1,0 +1,42 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "consoleADFBuyAnything"
+		},
+		"AzureSqlDatabase_linked_service_password": {
+			"value": ""
+		},
+		"linked_service_AzureSqlDatabase2_password": {
+			"value": ""
+		},
+		"AzureSqlDatabase_linked_service_properties_typeProperties_server": {
+			"value": "consolesqlserver.database.windows.net"
+		},
+		"AzureSqlDatabase_linked_service_properties_typeProperties_database": {
+			"value": "cfdatabase"
+		},
+		"AzureSqlDatabase_linked_service_properties_typeProperties_userName": {
+			"value": "cfadmin"
+		},
+		"linked_service_HttpServer_csv_properties_typeProperties_url": {
+			"value": "https://raw.githubusercontent.com/"
+		},
+		"linked_service_AzureSqlDatabase2_properties_typeProperties_server": {
+			"value": "consolesqlserver.database.windows.net"
+		},
+		"linked_service_AzureSqlDatabase2_properties_typeProperties_database": {
+			"value": "cfdatabase"
+		},
+		"linked_service_AzureSqlDatabase2_properties_typeProperties_userName": {
+			"value": "cfadmin"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}
