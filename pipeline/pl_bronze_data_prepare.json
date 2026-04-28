@@ -43,7 +43,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": "select max(lastdate) max_date from dateholder",
+						"sqlReaderQuery": "select   CAST(max(lastdate) AS DATE) max_date from dateholder",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -145,7 +145,7 @@
 					"storedProcedureParameters": {
 						"new_last_date": {
 							"value": {
-								"value": "'@activity('max_date').output.value[0].max_date'",
+								"value": "'@{activity('max_date').output.value[0].max_date}'",
 								"type": "Expression"
 							},
 							"type": "DateTime"
