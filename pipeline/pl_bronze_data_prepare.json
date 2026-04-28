@@ -43,7 +43,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": "select   CONVERT(DATE, orderdate, 103) max_date from SalesOrders",
+						"sqlReaderQuery": "select   max(CONVERT(DATE, orderdate, 103)) max_date from SalesOrders",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
