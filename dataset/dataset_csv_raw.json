@@ -1,0 +1,30 @@
+{
+	"name": "dataset_csv_raw",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "linked_service_HttpServer_csv",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"filename": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "HttpServerLocation",
+				"relativeUrl": {
+					"value": "abidhameed/buyanything/refs/heads/main/@{dataset().filename}",
+					"type": "Expression"
+				}
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
