@@ -43,7 +43,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": "select   CAST(max(lastdate) AS DATE) max_date from dateholder",
+						"sqlReaderQuery": "select   CONVERT(DATE, orderdate, 103) max_date from SalesOrders",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -148,7 +148,7 @@
 								"value": "'@{activity('max_date').output.value[0].max_date}'",
 								"type": "Expression"
 							},
-							"type": "DateTime"
+							"type": "Datetime"
 						}
 					}
 				},
