@@ -16,12 +16,13 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "AzureSqlSource",
-						"sqlReaderQuery": {
-							"value": "SELECT * FROM dbo.pipeline_control_config WHERE is_active = 1 AND ('@{pipeline().parameters.source_type_filter}' = 'ALL' OR source_type = '@{pipeline().parameters.source_type_filter}') ORDER BY priority ASC",
-							"type": "Expression"
-						},
+						"type": "SqlServerSource",
+						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "ds_sql_server_on_pem",
+						"type": "DatasetReference"
 					},
 					"firstRowOnly": false
 				}
