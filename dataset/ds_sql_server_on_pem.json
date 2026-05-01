@@ -1,0 +1,145 @@
+{
+	"name": "ds_sql_server_on_pem",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_OnPrem_SQLServer_Config",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "config_id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "source_name",
+				"type": "nvarchar"
+			},
+			{
+				"name": "source_type",
+				"type": "nvarchar"
+			},
+			{
+				"name": "source_system",
+				"type": "nvarchar"
+			},
+			{
+				"name": "linked_service_name",
+				"type": "nvarchar"
+			},
+			{
+				"name": "source_schema",
+				"type": "nvarchar"
+			},
+			{
+				"name": "source_table",
+				"type": "nvarchar"
+			},
+			{
+				"name": "source_file_path",
+				"type": "nvarchar"
+			},
+			{
+				"name": "source_file_pattern",
+				"type": "nvarchar"
+			},
+			{
+				"name": "sink_container",
+				"type": "nvarchar"
+			},
+			{
+				"name": "sink_folder",
+				"type": "nvarchar"
+			},
+			{
+				"name": "sink_format",
+				"type": "nvarchar"
+			},
+			{
+				"name": "load_type",
+				"type": "nvarchar"
+			},
+			{
+				"name": "watermark_column",
+				"type": "nvarchar"
+			},
+			{
+				"name": "watermark_value",
+				"type": "nvarchar"
+			},
+			{
+				"name": "watermark_data_type",
+				"type": "nvarchar"
+			},
+			{
+				"name": "partition_column",
+				"type": "nvarchar"
+			},
+			{
+				"name": "partition_type",
+				"type": "nvarchar"
+			},
+			{
+				"name": "databricks_notebook",
+				"type": "nvarchar"
+			},
+			{
+				"name": "target_silver_table",
+				"type": "nvarchar"
+			},
+			{
+				"name": "target_gold_table",
+				"type": "nvarchar"
+			},
+			{
+				"name": "is_active",
+				"type": "bit"
+			},
+			{
+				"name": "copy_parallelism",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "batch_size",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "priority",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "created_date",
+				"type": "datetime2",
+				"scale": 7
+			},
+			{
+				"name": "modified_date",
+				"type": "datetime2",
+				"scale": 7
+			},
+			{
+				"name": "last_run_status",
+				"type": "nvarchar"
+			},
+			{
+				"name": "last_run_datetime",
+				"type": "datetime2",
+				"scale": 7
+			},
+			{
+				"name": "last_run_rows",
+				"type": "bigint",
+				"precision": 19
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "pipeline_control_config"
+		}
+	}
+}
