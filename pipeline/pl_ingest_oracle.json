@@ -1,0 +1,182 @@
+{
+	"name": "pl_ingest_oracle",
+	"properties": {
+		"activities": [
+			{
+				"name": "Get_Max_Watermark_From_Source",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "OracleSource",
+						"oracleReaderQuery": {
+							"value": "SELECT TO_CHAR(MAX(@{pipeline().parameters.watermark_column}), 'YYYY-MM-DD HH24:MI:SS') AS max_wm FROM @{pipeline().parameters.source_schema}.@{pipeline().parameters.source_table}",
+							"type": "Expression"
+						},
+						"partitionOption": "None"
+					}
+				}
+			},
+			{
+				"name": "Copy_Oracle_to_Bronze",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Get_Max_Watermark_From_Source",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "OracleSource",
+						"oracleReaderQuery": {
+							"value": "@if(equals(pipeline().parameters.load_type, 'INCREMENTAL'), concat('SELECT * FROM ', pipeline().parameters.source_schema, '.', pipeline().parameters.source_table, ' WHERE ', pipeline().parameters.watermark_column, ' > TO_DATE(''', pipeline().parameters.watermark_value, ''', ''YYYY-MM-DD HH24:MI:SS'') AND ', pipeline().parameters.watermark_column, ' <= TO_DATE(''', activity('Get_Max_Watermark_From_Source').output.firstRow.max_wm, ''', ''YYYY-MM-DD HH24:MI:SS'')'), concat('SELECT * FROM ', pipeline().parameters.source_schema, '.', pipeline().parameters.source_table))",
+							"type": "Expression"
+						},
+						"partitionOption": "DynamicRange",
+						"partitionSettings": {
+							"partitionColumnName": {
+								"value": "@pipeline().parameters.partition_column",
+								"type": "Expression"
+							},
+							"partitionUpperBound": {
+								"value": "@activity('Get_Max_Watermark_From_Source').output.firstRow.max_wm",
+								"type": "Expression"
+							},
+							"partitionLowerBound": {
+								"value": "@pipeline().parameters.watermark_value",
+								"type": "Expression"
+							}
+						}
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings",
+							"copyBehavior": "FlattenHierarchy"
+						}
+					},
+					"enableStaging": false,
+					"parallelCopies": {
+						"value": "@pipeline().parameters.copy_parallelism",
+						"type": "Expression"
+					},
+					"dataIntegrationUnits": 8
+				}
+			},
+			{
+				"name": "Update_Watermark",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "Copy_Oracle_to_Bronze",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "dbo.sp_update_watermark",
+					"storedProcedureParameters": {
+						"config_id": {
+							"value": {
+								"value": "@pipeline().parameters.config_id",
+								"type": "Expression"
+							},
+							"type": "Int32"
+						},
+						"watermark_val": {
+							"value": {
+								"value": "@activity('Get_Max_Watermark_From_Source').output.firstRow.max_wm",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"run_status": {
+							"value": "SUCCESS",
+							"type": "String"
+						},
+						"rows_copied": {
+							"value": {
+								"value": "@activity('Copy_Oracle_to_Bronze').output.rowsCopied",
+								"type": "Expression"
+							},
+							"type": "Int64"
+						}
+					}
+				}
+			}
+		],
+		"parameters": {
+			"config_id": {
+				"type": "int"
+			},
+			"source_name": {
+				"type": "string"
+			},
+			"linked_service_name": {
+				"type": "string"
+			},
+			"source_schema": {
+				"type": "string"
+			},
+			"source_table": {
+				"type": "string"
+			},
+			"sink_container": {
+				"type": "string"
+			},
+			"sink_folder": {
+				"type": "string"
+			},
+			"load_type": {
+				"type": "string"
+			},
+			"watermark_column": {
+				"type": "string"
+			},
+			"watermark_value": {
+				"type": "string"
+			},
+			"watermark_data_type": {
+				"type": "string"
+			},
+			"partition_column": {
+				"type": "string"
+			},
+			"copy_parallelism": {
+				"type": "int"
+			},
+			"batch_size": {
+				"type": "int"
+			},
+			"databricks_notebook": {
+				"type": "string"
+			}
+		},
+		"annotations": []
+	}
+}
