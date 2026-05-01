@@ -1,0 +1,395 @@
+{
+	"name": "pl_master_ingestion",
+	"properties": {
+		"description": "Metadata-driven master ingestion pipeline",
+		"activities": [
+			{
+				"name": "Lookup_ActiveSources",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": {
+							"value": "SELECT * FROM dbo.pipeline_control_config WHERE is_active = 1 AND ('@{pipeline().parameters.source_type_filter}' = 'ALL' OR source_type = '@{pipeline().parameters.source_type_filter}') ORDER BY priority ASC",
+							"type": "Expression"
+						},
+						"partitionOption": "None"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "ForEach_Source",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Lookup_ActiveSources",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Lookup_ActiveSources').output.value",
+						"type": "Expression"
+					},
+					"isSequential": false,
+					"batchCount": 5,
+					"activities": [
+						{
+							"name": "Switch_SourceType",
+							"type": "Switch",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"on": {
+									"value": "@item().source_type",
+									"type": "Expression"
+								},
+								"cases": [
+									{
+										"value": "CSV",
+										"activities": [
+											{
+												"name": "Execute_CSV_Pipeline",
+												"type": "ExecutePipeline",
+												"dependsOn": [],
+												"policy": {
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"waitOnCompletion": true,
+													"parameters": {
+														"config_id": {
+															"value": "@item().config_id",
+															"type": "Expression"
+														},
+														"source_name": {
+															"value": "@item().source_name",
+															"type": "Expression"
+														},
+														"linked_service_name": {
+															"value": "@item().linked_service_name",
+															"type": "Expression"
+														},
+														"source_file_path": {
+															"value": "@item().source_file_path",
+															"type": "Expression"
+														},
+														"source_file_pattern": {
+															"value": "@item().source_file_pattern",
+															"type": "Expression"
+														},
+														"sink_container": {
+															"value": "@item().sink_container",
+															"type": "Expression"
+														},
+														"sink_folder": {
+															"value": "@item().sink_folder",
+															"type": "Expression"
+														},
+														"sink_format": {
+															"value": "@item().sink_format",
+															"type": "Expression"
+														},
+														"load_type": {
+															"value": "@item().load_type",
+															"type": "Expression"
+														},
+														"watermark_column": {
+															"value": "@item().watermark_column",
+															"type": "Expression"
+														},
+														"watermark_value": {
+															"value": "@item().watermark_value",
+															"type": "Expression"
+														},
+														"partition_column": {
+															"value": "@item().partition_column",
+															"type": "Expression"
+														},
+														"copy_parallelism": {
+															"value": "@item().copy_parallelism",
+															"type": "Expression"
+														},
+														"databricks_notebook": {
+															"value": "@item().databricks_notebook",
+															"type": "Expression"
+														}
+													}
+												}
+											}
+										]
+									},
+									{
+										"value": "JSON",
+										"activities": [
+											{
+												"name": "Execute_JSON_Pipeline",
+												"type": "ExecutePipeline",
+												"dependsOn": [],
+												"policy": {
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"waitOnCompletion": true,
+													"parameters": {
+														"config_id": {
+															"value": "@item().config_id",
+															"type": "Expression"
+														},
+														"source_name": {
+															"value": "@item().source_name",
+															"type": "Expression"
+														},
+														"linked_service_name": {
+															"value": "@item().linked_service_name",
+															"type": "Expression"
+														},
+														"source_file_path": {
+															"value": "@item().source_file_path",
+															"type": "Expression"
+														},
+														"sink_container": {
+															"value": "@item().sink_container",
+															"type": "Expression"
+														},
+														"sink_folder": {
+															"value": "@item().sink_folder",
+															"type": "Expression"
+														},
+														"load_type": {
+															"value": "@item().load_type",
+															"type": "Expression"
+														},
+														"watermark_column": {
+															"value": "@item().watermark_column",
+															"type": "Expression"
+														},
+														"watermark_value": {
+															"value": "@item().watermark_value",
+															"type": "Expression"
+														},
+														"databricks_notebook": {
+															"value": "@item().databricks_notebook",
+															"type": "Expression"
+														}
+													}
+												}
+											}
+										]
+									},
+									{
+										"value": "ORACLE",
+										"activities": [
+											{
+												"name": "Execute_Oracle_Pipeline",
+												"type": "ExecutePipeline",
+												"dependsOn": [],
+												"policy": {
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"waitOnCompletion": true,
+													"parameters": {
+														"config_id": {
+															"value": "@item().config_id",
+															"type": "Expression"
+														},
+														"source_name": {
+															"value": "@item().source_name",
+															"type": "Expression"
+														},
+														"linked_service_name": {
+															"value": "@item().linked_service_name",
+															"type": "Expression"
+														},
+														"source_schema": {
+															"value": "@item().source_schema",
+															"type": "Expression"
+														},
+														"source_table": {
+															"value": "@item().source_table",
+															"type": "Expression"
+														},
+														"sink_container": {
+															"value": "@item().sink_container",
+															"type": "Expression"
+														},
+														"sink_folder": {
+															"value": "@item().sink_folder",
+															"type": "Expression"
+														},
+														"load_type": {
+															"value": "@item().load_type",
+															"type": "Expression"
+														},
+														"watermark_column": {
+															"value": "@item().watermark_column",
+															"type": "Expression"
+														},
+														"watermark_value": {
+															"value": "@item().watermark_value",
+															"type": "Expression"
+														},
+														"watermark_data_type": {
+															"value": "@item().watermark_data_type",
+															"type": "Expression"
+														},
+														"partition_column": {
+															"value": "@item().partition_column",
+															"type": "Expression"
+														},
+														"copy_parallelism": {
+															"value": "@item().copy_parallelism",
+															"type": "Expression"
+														},
+														"batch_size": {
+															"value": "@item().batch_size",
+															"type": "Expression"
+														},
+														"databricks_notebook": {
+															"value": "@item().databricks_notebook",
+															"type": "Expression"
+														}
+													}
+												}
+											}
+										]
+									},
+									{
+										"value": "SQLSERVER",
+										"activities": [
+											{
+												"name": "Execute_SQLServer_Pipeline",
+												"type": "ExecutePipeline",
+												"dependsOn": [],
+												"policy": {
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"waitOnCompletion": true,
+													"parameters": {
+														"config_id": {
+															"value": "@item().config_id",
+															"type": "Expression"
+														},
+														"source_name": {
+															"value": "@item().source_name",
+															"type": "Expression"
+														},
+														"linked_service_name": {
+															"value": "@item().linked_service_name",
+															"type": "Expression"
+														},
+														"source_schema": {
+															"value": "@item().source_schema",
+															"type": "Expression"
+														},
+														"source_table": {
+															"value": "@item().source_table",
+															"type": "Expression"
+														},
+														"sink_container": {
+															"value": "@item().sink_container",
+															"type": "Expression"
+														},
+														"sink_folder": {
+															"value": "@item().sink_folder",
+															"type": "Expression"
+														},
+														"load_type": {
+															"value": "@item().load_type",
+															"type": "Expression"
+														},
+														"watermark_column": {
+															"value": "@item().watermark_column",
+															"type": "Expression"
+														},
+														"watermark_value": {
+															"value": "@item().watermark_value",
+															"type": "Expression"
+														},
+														"watermark_data_type": {
+															"value": "@item().watermark_data_type",
+															"type": "Expression"
+														},
+														"partition_column": {
+															"value": "@item().partition_column",
+															"type": "Expression"
+														},
+														"copy_parallelism": {
+															"value": "@item().copy_parallelism",
+															"type": "Expression"
+														},
+														"databricks_notebook": {
+															"value": "@item().databricks_notebook",
+															"type": "Expression"
+														}
+													}
+												}
+											}
+										]
+									}
+								]
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Trigger_Databricks_ELT",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "ForEach_Source",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/pipelines/orchestrate_elt",
+					"baseParameters": {
+						"run_date": {
+							"value": "@formatDateTime(pipeline().TriggerTime, 'yyyy-MM-dd')",
+							"type": "Expression"
+						},
+						"triggered_by": {
+							"value": "@pipeline().RunId",
+							"type": "Expression"
+						}
+					}
+				}
+			}
+		],
+		"parameters": {
+			"source_type_filter": {
+				"type": "string",
+				"defaultValue": "ALL"
+			}
+		},
+		"annotations": []
+	}
+}
