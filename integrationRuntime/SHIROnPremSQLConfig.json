@@ -1,0 +1,6 @@
+{
+	"name": "SHIROnPremSQLConfig",
+	"properties": {
+		"type": "SelfHosted"
+	}
+}
