@@ -2,7 +2,7 @@
 	"name": "dsOnPremAdventureworkoltpDBTableList",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "LS_OnPrem_SQLServer_Config",
+			"referenceName": "ls_onprem_sqlserver_adventureworks",
 			"type": "LinkedServiceReference"
 		},
 		"annotations": [],
