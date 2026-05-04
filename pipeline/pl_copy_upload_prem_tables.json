@@ -42,7 +42,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('lkup_get_table_list').output.count",
+						"value": "@activity('lkup_get_table_list').output.value",
 						"type": "Expression"
 					}
 				}
