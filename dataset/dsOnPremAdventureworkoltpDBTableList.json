@@ -1,0 +1,12 @@
+{
+	"name": "dsOnPremAdventureworkoltpDBTableList",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_OnPrem_SQLServer_Config",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": []
+	}
+}
