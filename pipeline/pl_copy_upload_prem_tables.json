@@ -16,13 +16,13 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "SqlServerSource",
-						"sqlReaderQuery": "  select top 3 * from INFORMATION_SCHEMA.TABLES where TABLE_TYPE = 'BASE TABLE' and table_name like 'p%'",
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "  select * from INFORMATION_SCHEMA.TABLES where TABLE_TYPE = 'BASE TABLE'",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
 					"dataset": {
-						"referenceName": "dsOnPremAdventureworkoltpDBTableList",
+						"referenceName": "ds_AzureSqlallobjects",
 						"type": "DatasetReference"
 					},
 					"firstRowOnly": false
