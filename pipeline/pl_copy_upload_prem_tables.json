@@ -17,13 +17,15 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlServerSource",
+						"sqlReaderQuery": "  select * from INFORMATION_SCHEMA.TABLES where TABLE_TYPE = 'BASE TABLE' and table_name like 'p%'",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
 					"dataset": {
-						"referenceName": "ds_sql_server_on_pem",
+						"referenceName": "dsOnPremAdventureworkoltpDBTableList",
 						"type": "DatasetReference"
-					}
+					},
+					"firstRowOnly": false
 				}
 			}
 		],
