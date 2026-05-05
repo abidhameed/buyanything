@@ -5,12 +5,20 @@
 			"referenceName": "ls_dyn_input_csv",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"P_FileName": {
+				"type": "string"
+			}
+		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "cars.csv",
+				"fileName": {
+					"value": "@dataset().P_FileName",
+					"type": "Expression"
+				},
 				"fileSystem": "dynamiccsv"
 			},
 			"columnDelimiter": ",",
