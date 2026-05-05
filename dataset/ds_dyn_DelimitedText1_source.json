@@ -1,0 +1,48 @@
+{
+	"name": "ds_dyn_DelimitedText1_source",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_dyn_input_csv",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "cars.csv",
+				"fileSystem": "dynamiccsv"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "Make",
+				"type": "String"
+			},
+			{
+				"name": "Model",
+				"type": "String"
+			},
+			{
+				"name": "Type",
+				"type": "String"
+			},
+			{
+				"name": "Origin",
+				"type": "String"
+			},
+			{
+				"name": "DriveTrain",
+				"type": "String"
+			},
+			{
+				"name": "Length",
+				"type": "String"
+			}
+		]
+	}
+}
