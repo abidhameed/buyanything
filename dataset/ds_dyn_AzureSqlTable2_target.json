@@ -5,6 +5,11 @@
 			"referenceName": "ls_dyn_AzureSqlDatabase1",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"P_TableName": {
+				"type": "string"
+			}
+		},
 		"annotations": [],
 		"type": "AzureSqlTable",
 		"schema": [
@@ -37,7 +42,10 @@
 		],
 		"typeProperties": {
 			"schema": "dbo",
-			"table": "Cars"
+			"table": {
+				"value": "@dataset().P_TableName",
+				"type": "Expression"
+			}
 		}
 	}
 }
