@@ -1,0 +1,16 @@
+{
+	"name": "SourceDataset_p2n",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_onprem_sqlserver_adventureworks",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "Sales",
+			"table": "SalesOrderHeader"
+		}
+	}
+}
