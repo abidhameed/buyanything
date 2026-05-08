@@ -1,0 +1,25 @@
+{
+	"name": "Trigger_p2n",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "pl_CopyPipeline_salesorder",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Hour",
+				"interval": 24,
+				"startTime": "2026-05-08T12:08:00Z",
+				"endTime": "2026-05-10T12:08:00Z",
+				"timeZone": "UTC"
+			}
+		}
+	}
+}
