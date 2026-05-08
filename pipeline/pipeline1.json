@@ -50,7 +50,10 @@
 				"outputs": [
 					{
 						"referenceName": "ds_dyn_AzureSqlTable2_target",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"P_TableName": "1"
+						}
 					}
 				]
 			}
